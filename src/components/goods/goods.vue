@@ -24,23 +24,28 @@
                   <span>月售{{food.sellCount}}份</span><span>好评率{{food.rating}}%</span>
                 </p>
                 <p class="price"><span class="new">￥{{food.price}}</span><span v-show="food.oldPrice" class="old">￥{{food.oldPrice}}</span></p>
+                
               </div>
-              <i class="icon-add_circle" @click="selectFood(food)"></i>
+              <div class="cartcontrol-wrapper">
+      		  	<cartcontrol :food="food"></cartcontrol>
+      		  </div>                   
+              <!-- <i class="icon-add_circle" @click="selectFood(food)"></i>
               <span class="item-num">{{food.count}}</span>
-      			<!-- <i class="icon-remove_circle_outline"></i>  -->
+      			<i class="icon-remove_circle_outline"></i>  -->      		  
             </li>
           </ul>
         </li>
       </ul>
     </div>
   </div>
-  <shopcart :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice" ></shopcart>  
+  <shopcart v-ref:shopcart :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice" :select-foods="selectFoods()" ></shopcart>  
 </template>
 
 
 
 <script>
 import shopcart from 'components/shopcart/shopcart';
+import cartcontrol from 'components/cartcontrol/cartcontrol';
 import BScroll from 'better-scroll';
 
 const ERR_OK = 0;
@@ -55,8 +60,8 @@ export default {
     return {
       goods: [],
       listHeight: [],
-      scrollY: 0,
-      selectFoods: []
+      scrollY: 0
+      // selectFoods: []
     };
   },
   computed: {
@@ -99,17 +104,29 @@ export default {
 		let el = foodList[index];
 		this.foodsScroll.scrollToElement(el, 300);
 	},
-	selectFood(food) {
-		food.count++;
-		// this.selectFoods.push(item);
-		console.log(food.name + ' ' + food.count);
+	selectFoods() {
+		let foods = [];
+		this.goods.forEach((good) => {
+			good.foods.forEach((food) => {
+				if (food.count) {
+					foods.push(food);
+				}
+			});
+		});
+		return foods;
+	},
+	_drop(target) {
+		// 体验优化，异步执行下落动画
+		this.$nextTick(() => {
+			this.$refs.shopcart.drop(target);
+		});
 	},
     _initScroll() {
       this.menuScroll = new BScroll(this.$els.menuWrapper, {click: true});
-      this.foodsScroll = new BScroll(this.$els.foodsWrapper, {probeType: 3});
+      this.foodsScroll = new BScroll(this.$els.foodsWrapper, {probeType: 3, click: true});
       this.foodsScroll.on('scroll', (pos) => {
         this.scrollY = Math.abs(Math.round(pos.y));
-		console.log('this.scrollY ' + this.scrollY);
+		// console.log('this.scrollY ' + this.scrollY);
       });
     },
     _calculateHeight() {
@@ -124,7 +141,13 @@ export default {
     }
   },
   components: {
-      shopcart
+      shopcart,
+      cartcontrol
+  },
+  events: {
+	'cart.add'(target) {
+		this._drop(target);
+	}
   }
 };
 </script>
@@ -252,26 +275,30 @@ export default {
 								text-decoration: line-through
 								font-size: 10px
 								color: rgb(147, 153, 159)
-					.icon-add_circle
+					.cartcontrol-wrapper
 						position: absolute
 						right: 0
-						bottom: 18px
-						color: rgb(0, 160, 220)
-						font-size: 24px
-						line-height: 24px
-					.icon-remove_circle_outline
-						position: absolute
-						right: 42px
-						bottom: 18px
-						color: rgb(0, 160, 220)
-						font-size: 24px
-						line-height: 24px
-					.item-num
-						position: absolute
-						right: 48px
-						bottom: 18px
-						color: rgb(147, 153, 159)
-						font-size: 10px
-						line-height: 24px						
-
+						bottom: 12px
+					// .icon-add_circle
+					// 	position: absolute
+					// 	right: 0
+					// 	bottom: 18px
+					// 	color: rgb(0, 160, 220)
+					// 	font-size: 24px
+					// 	line-height: 24px
+					// .icon-remove_circle_outline
+					// 	position: absolute
+					// 	right: 42px
+					// 	bottom: 18px
+					// 	color: rgb(0, 160, 220)
+					// 	font-size: 24px
+					// 	line-height: 24px
+					// .item-num
+					// 	position: absolute
+					// 	right: 48px
+					// 	bottom: 18px
+					// 	color: rgb(147, 153, 159)
+					// 	font-size: 10px
+					// 	line-height: 24px						
+	 
 </style>

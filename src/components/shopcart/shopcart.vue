@@ -3,7 +3,7 @@
     <div class="content">
       <div class="content-left">
         <div class="logo-wrapper">
-          <i class="icon-shopping_cart" :class="{'highlight': totalCount>0}"></i>         
+          <i class="icon-shopping_cart" :class="{'highlight': totalCount>0}"></i>
           <span class="num" v-show="totalCount>0">{{totalCount}}</span>
         </div>
         <span class="price" :class="{'hightlight': totalPrice>0}">￥{{totalPrice}}</span>
@@ -11,13 +11,19 @@
         <span class="desc">另需配送费￥{{deliveryPrice}}元</span>
       </div>
       <div class="content-right">
-      <div class="pay" :class="{'checkout': isCheckout}">
-      	{{payDesc}}
+        <div class="pay" :class="{'checkout': isCheckout}">
+          {{payDesc}}
+        </div>
       </div>      
-      </div>
+    </div>
+    <div class="ball-container">
+    	<div class="ball" v-for="ball in balls" v-show="ball.show" transition="drop">
+    		<div class="inner inner-hook"></div>
+    	</div>
     </div>
   </div>
 </template>
+
 
 
 <script>
@@ -42,12 +48,35 @@ export default {
       type: Number
     }
   },
+  data() {
+	return {
+		balls: [
+		{
+			show: false
+		},
+		{
+			show: false
+		},
+		{
+			show: false
+		},
+		{
+			show: false
+		},
+		{
+			show: false
+		}
+		],
+		dropBall: []
+	};
+  },
   computed: {
     totalPrice() {
       let total = 0;
       this.selectFoods.forEach((food) => {
         total += food.price * food.count;
       });
+      // console.log(total);
       return total;
     },
     totalCount() {
@@ -69,6 +98,64 @@ export default {
     isCheckout() {
 	return this.totalPrice >= this.minPrice;
     }
+  },
+  methods: {
+	drop(el) {
+		console.log(el);
+		for (let i = 0; i < this.balls.length; i++) {
+			let ball = this.balls[i];
+			if (!ball.show) {
+				ball.show = true;
+				ball.el = el;
+				this.dropBall.push(ball);
+				return;
+			}
+		}
+	}
+  },
+  transitions: {
+	drop: {
+		beforeEnter(el) {
+			let count = this.balls.length;
+			while (count--) {
+				let ball = this.balls[count];
+				if (ball.show) {
+					let rect = ball.el.getBoundingClientRect();
+					let x = rect.left - 32;
+					let y = -(window.innerHeight - rect.top - 22);
+					el.style.display = '';
+					// el.style.webkitTransform = `translate3D(0, $(y)px, 0)`;
+					// el.style.transform = `translate3D(0, $(y)px, 0)`;
+					el.style.webkitTransform = 'translate3d(0,' + y + 'px, 0)';
+					el.style.transform = 'translate3d(0,' + y + 'px, 0)';
+					// el.style.webkitTransform = 'translate3d(' + x + ',' + y + 'px, 0)';
+					// el.style.transform = 'translate3d(' + x + 'px,' + y + 'px, 0)';
+					let inner = el.getElementsByClassName('inner-hook')[0];
+					inner.style.webkitTransform = 'translate3d(' + x + 'px,0,0)';
+					inner.style.transform = 'translate3d(' + x + 'px,0,0)';
+				}
+			}
+		},
+		enter(el) {
+			// 触发浏览器重绘
+			/* eslint-disable no-unused-vars */
+			let rf = el.offsetHeight;
+			this.$nextTick(() => {
+				el.style.webkitTransform = 'translate3d(0, 0, 0)';
+				el.style.transform = 'translate3d(0, 0, 0)';
+				let inner = el.getElementsByClassName('inner-hook')[0];
+				inner.style.webkitTransform = 'translate3d(0,0,0)';
+				inner.style.transform = 'translate3d(0,0,0)';
+			});
+		},
+		afterEnter(el) {
+			let ball = this.dropBall.shift();
+			if (ball.show) {
+				ball.show = false;
+				el.style.display = 'none';
+			}
+		}
+	}
   }
 };
 </script>
@@ -166,5 +253,20 @@ export default {
 				vertical-align: top		
 				font-size: 10px		
 				line-height: 48px			
+	.ball-container
+		.ball
+			position: fixed
+			left: 32px
+			bottom: 32px
+			z-index: 200
+			&.drop-transition
+				transition: all 1s cubic-bezier(0.49, -0.29, 0.75, 0.41)
+				.inner
+					width: 16px
+					height: 16px
+					border-radius: 50%
+					background: rgb(0, 160, 220)
+					transition: all 1s linear
+					// cubic-bezier(0.49, -0.29, 0.75, 0.41) 		
 	
 </style>
