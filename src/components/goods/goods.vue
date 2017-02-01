@@ -28,10 +28,7 @@
               </div>
               <div class="cartcontrol-wrapper">
       		  	<cartcontrol :food="food"></cartcontrol>
-      		  </div>                   
-              <!-- <i class="icon-add_circle" @click="selectFood(food)"></i>
-              <span class="item-num">{{food.count}}</span>
-      			<i class="icon-remove_circle_outline"></i>  -->      		  
+      		  </div>
             </li>
           </ul>
         </li>
@@ -61,7 +58,6 @@ export default {
       goods: [],
       listHeight: [],
       scrollY: 0
-      // selectFoods: []
     };
   },
   computed: {
@@ -81,12 +77,6 @@ export default {
       response = response.body;
       if (response.errno === ERR_OK) {
         this.goods = response.data;
-  //       for (let i = 0; i < this.goods.length; i++) {
-		// 	for (let j = 0; j < this.goods[i].length; j++) {
-		// 		(this.goods[i]).foods[j][count] = 0;
-		// 	}
-		// }
-		// console.log(this.goods[0].foods);
         this.$nextTick(() => {
           this._initScroll();
           this._calculateHeight();
@@ -126,7 +116,6 @@ export default {
       this.foodsScroll = new BScroll(this.$els.foodsWrapper, {probeType: 3, click: true});
       this.foodsScroll.on('scroll', (pos) => {
         this.scrollY = Math.abs(Math.round(pos.y));
-		// console.log('this.scrollY ' + this.scrollY);
       });
     },
     _calculateHeight() {
@@ -153,9 +142,6 @@ export default {
 </script>
 
 
-
-
-
 <style lang="stylus" rel="stylesheet/stylus">
 @import "../../common/stylus/mixin.styl"
 
@@ -168,19 +154,15 @@ export default {
 	background: rgb(255, 255, 255)
 	overflow: hidden
 	.menu-wrapper
-		fix: 0 0 80px				
+		flex: 0 0 80px				
 		width: 80px
-		background: #f3f5f7
-		// height: 100%	
-		// font-size: 12px
-		// overflow-y: auto			
+		background: #f3f5f7		
 		.menu-item
 			display: table	
 			height: 54px
 			width: 56px
 			line-height: 14px
-			padding: 0 12px			
-			// color: rgba(7, 17, 27, 0.7)					
+			padding: 0 12px							
 			&.current
 				position: relative
 				z-index: 10
@@ -198,8 +180,7 @@ export default {
 				.icon
 					display: inline-block
 					width: 12px
-					height: 12px
-					// margin-right: 2px
+					height: 12px					
 					background-size: 12px 12px	
 					background-repeat: no-repeat					
 					vertical-align: top				
@@ -214,91 +195,61 @@ export default {
 					&.special
 						bg-image('special_3')					
 	.foods-wrapper		
-		flex: 1
-		// overflow-y: auto
-		// .food-list
-			// width: 100%
-			.title
-				height: 26px
-				line-height: 26px						
-				padding-left: 14px
-				font-size: 12px
-				color: rgb(147, 153, 159)
-				border-left: 2px solid #d9dde1
-				background-color: #f3f5f7
-			// .category-list
-				// padding: 0 18px
-				.food-item
-					margin: 18px
-					padding-bottom: 18px					
-					// border-bottom: 1px solid rgba(7, 17, 27, 0.1)
-					border-1px(rgba(7, 17, 27, 0.1))
-					position: relative
-					display: flex
-					&:last-child
-						border-none()
-						// padding-bottom: 0
-						margin-bottom: 0					
-					.icon
-						// display: inline-block
-						width: 57px
-						height: 57px
-						flex: 0 0 57px
-						vertical-align: top
-						margin-right: 10px
-					.content
-						// display: inline-block
-						flex: 1
-						.name 
-							font-size: 14px
-							margin: 2px 0 8px
-							color: rgb(7, 17, 27)	
-							line-height: 14px					
-						.desc, .extra
-							font-size: 10px							
-							color: rgb(147, 153, 159)
-							line-height: 10px
-						.desc
-							margin-bottom: 8px
-							line-height: 12px
-						.extra
-							span:first-child
-								margin-right: 12px				
-						.price
-							font-weight: 700
-							line-height: 24px
-							.new
-								font-size: 14px
-								color: rgb(240, 20, 20)						
-								margin-right: 8px							
-							.old
-								text-decoration: line-through
-								font-size: 10px
-								color: rgb(147, 153, 159)
-					.cartcontrol-wrapper
-						position: absolute
-						right: 0
-						bottom: 12px
-					// .icon-add_circle
-					// 	position: absolute
-					// 	right: 0
-					// 	bottom: 18px
-					// 	color: rgb(0, 160, 220)
-					// 	font-size: 24px
-					// 	line-height: 24px
-					// .icon-remove_circle_outline
-					// 	position: absolute
-					// 	right: 42px
-					// 	bottom: 18px
-					// 	color: rgb(0, 160, 220)
-					// 	font-size: 24px
-					// 	line-height: 24px
-					// .item-num
-					// 	position: absolute
-					// 	right: 48px
-					// 	bottom: 18px
-					// 	color: rgb(147, 153, 159)
-					// 	font-size: 10px
-					// 	line-height: 24px						
-	 
-</style>
+		flex: 1		
+		.title
+			height: 26px
+			line-height: 26px						
+			padding-left: 14px
+			font-size: 12px
+			color: rgb(147, 153, 159)
+			border-left: 2px solid #d9dde1
+			background-color: #f3f5f7
+		.food-item
+			margin: 18px
+			padding-bottom: 18px
+			border-1px(rgba(7, 17, 27, 0.1))
+			position: relative
+			display: flex
+			&:last-child
+				border-none()
+				margin-bottom: 0					
+			.icon
+				width: 57px
+				height: 57px
+				flex: 0 0 57px
+				vertical-align: top
+				margin-right: 10px
+			.content
+				flex: 1
+				.name 
+					font-size: 14px
+					margin: 2px 0 8px
+					color: rgb(7, 17, 27)	
+					line-height: 14px					
+				.desc, .extra
+					font-size: 10px							
+					color: rgb(147, 153, 159)
+					line-height: 10px
+				.desc
+					margin-bottom: 8px
+					line-height: 12px
+				.extra
+					span:first-child
+						margin-right: 12px				
+				.price
+					font-weight: 700
+					line-height: 24px
+					.new
+						font-size: 14px
+						color: rgb(240, 20, 20)						
+						margin-right: 8px							
+					.old
+						text-decoration: line-through
+						font-size: 10px
+						color: rgb(147, 153, 159)
+			.cartcontrol-wrapper
+				position: absolute
+				right: 0
+				bottom: 12px			
+	
+</style>	

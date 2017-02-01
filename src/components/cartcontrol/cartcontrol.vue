@@ -4,9 +4,8 @@
   </span>
   <span class="cart-count" v-show="food.count>0">{{food.count}}</span>
   <span class="cart-increase icon-add_circle" @click="addCart">
-    <!-- <div class="shop-ball"></div>    -->
-  </span>
-  </span> 
+  </span>   
+  </div>
 </template>
 
 <script>
@@ -28,7 +27,7 @@ export default {
       } else {
       this.food.count++;
     }
-    this.$dispatch('cart.add', event.target);
+      this.$dispatch('cart.add', event.target);
     },
     decreaseCart(event) {
       if (!event._constructed) {
@@ -38,9 +37,6 @@ export default {
         this.food.count--;
       }
     }
-  },
-  created() {
-    // console.log(this.food.name);
   }
 };
 </script>
@@ -65,25 +61,6 @@ export default {
             // transform: translateX(36px) rotate(360deg) translate3D(36px,0,0);  
             transform: translate3d(36px,0,0) rotate(360deg);      
             opacity: 0
-        :first-child
-            .shop-ball
-                position: absolute
-                top: 0
-                left: 0                
-                width: 20px
-                height: 20px
-                background: #f80
-                background-size: 20px
-                border-radius: 10px
-                // animation: myfirst 1s; 
-                // @keyframes myfirst
-                //     0%   {left:0px; top:0px;}
-                //     25%  {left:-100px; top:-100px;}
-                //     50%  {left:-200px; top:0px;}
-                //     75%  {left:-200px; top:100px;}
-                //     100% {left:-200px; top:200px;}                
-
-
     .cart-count
         display: inline-block        
         vertical-align: top       
@@ -92,5 +69,4 @@ export default {
         line-height: 24px
         text-align: center             
         font-size: 10px               
-        color: rgb(147, 153, 159)      
-</style>
+        color: rgb(147, 153, 159)
