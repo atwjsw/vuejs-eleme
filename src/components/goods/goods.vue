@@ -15,7 +15,7 @@
         <li class="food-list food-list-hook" v-for="item in goods">
           <h1 class="title">{{item.name}}</h1>
           <ul>
-            <li class="food-item border-1px" v-for="food in item.foods">
+            <li class="food-item border-1px" v-for="food in item.foods"  @click="selectFood(food, $event)">
               <img class="icon" :src="food.icon" alt="food.name">
               <div class="content">
                 <h2 class="name">{{food.name}}</h2>
@@ -23,26 +23,25 @@
                 <p class="extra">
                   <span>月售{{food.sellCount}}份</span><span>好评率{{food.rating}}%</span>
                 </p>
-                <p class="price"><span class="new">￥{{food.price}}</span><span v-show="food.oldPrice" class="old">￥{{food.oldPrice}}</span></p>
-                
+                <p class="price"><span class="new">￥{{food.price}}</span><span v-show="food.oldPrice" class="old">￥{{food.oldPrice}}</span></p>                
               </div>
               <div class="cartcontrol-wrapper">
       		  	<cartcontrol :food="food"></cartcontrol>
-      		  </div>
+      		  </div>      		     		  
             </li>
           </ul>
         </li>
       </ul>
     </div>
   </div>
-  <shopcart v-ref:shopcart :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice" :select-foods="selectFoods()" ></shopcart>  
+  <food v-ref:food :food="selectedFood"></food>
+  <shopcart v-ref:shopcart :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice" :select-foods="selectFoods()" ></shopcart>    
 </template>
-
-
 
 <script>
 import shopcart from 'components/shopcart/shopcart';
 import cartcontrol from 'components/cartcontrol/cartcontrol';
+import food from 'components/food/food';
 import BScroll from 'better-scroll';
 
 const ERR_OK = 0;
@@ -57,7 +56,9 @@ export default {
     return {
       goods: [],
       listHeight: [],
-      scrollY: 0
+      scrollY: 0,
+      foodShow: false,
+      selectedFood: {}
     };
   },
   computed: {
@@ -105,6 +106,17 @@ export default {
 		});
 		return foods;
 	},
+	selectFood(food, event) {
+		if (!event._constructed) {
+			return;
+		}
+		this.selectedFood = food;
+		this.foodShow = true;
+		this.$refs.food.show();
+	},
+	hideFood() {
+		this.foodShow = false;
+	},
 	_drop(target) {
 		// 体验优化，异步执行下落动画
 		this.$nextTick(() => {
@@ -131,7 +143,8 @@ export default {
   },
   components: {
       shopcart,
-      cartcontrol
+      cartcontrol,
+      food
   },
   events: {
 	'cart.add'(target) {
@@ -250,6 +263,5 @@ export default {
 			.cartcontrol-wrapper
 				position: absolute
 				right: 0
-				bottom: 12px			
-	
+				bottom: 12px
 </style>	

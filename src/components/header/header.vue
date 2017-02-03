@@ -22,7 +22,6 @@
           <h1 class="name">{{seller.name}}</h1>
           <div class="star-wrapper">
             <star :score="seller.score" :size="48"></star>
-            <!-- <star :score="5" :size="24"></star> -->
           </div>
           <div class="title">
             <div class="line"></div>
@@ -39,8 +38,7 @@
             <div class="text">商家公告</div>
             <div class="line"></div>
           </div>
-          <!--   <p class="seller-bulletin-text">{{seller.bulletin}}{{seller.bulletin}}{{seller.bulletin}}{{seller.bulletin}}{{seller.bulletin}}</p> -->
-          <p class="bulletin">{{seller.bulletin}}</p>
+          <p class="bulletin">{{seller.bulletin}}</p>         
         </div>
       </div>
       <div class="detail-close">
@@ -194,7 +192,8 @@ export default {
 		top: 0
 		bottom:0
 		left: 0
-		right: 0
+		// height: 100%
+		// right: 0
 		overflow: auto
 		// background-color: rgba(7,17,27,0.8)
 		// blur: 10px		
@@ -211,10 +210,8 @@ export default {
 			min-height: 100%
 			width: 100%
 			.detail-main
-				padding: 64px 36px		
-				// text-align: center
+				padding: 64px 36px	
 				position: relative
-				// height: 100%		
 				.name			
 					font-size: 16px
 					font-weight: 700
@@ -231,20 +228,17 @@ export default {
 						padding: 0 12px				
 						font-size: 14px
 						font-weight: 700
-						// line-height: 14px
 					.line								
 						flex: 1
 						border-bottom: 1px solid rgba(255, 255, 255, 0.2)
 						position: relative
 						top: -6px
-						// margin-bottom: 6px
 				.supports
 					text-align: left
 					font-size: 12px
 					color: rgb(255, 255, 255)	
 					.support-item									
 						line-height: 16px
-						// height: 16px
 						padding-left: 34px
 						background-size: 16px 16px	
 						background-repeat: no-repeat

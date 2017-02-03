@@ -10,7 +10,7 @@
         <i class="divider"></i>
         <span class="desc">另需配送费￥{{deliveryPrice}}元</span>
       </div>
-      <div class="content-right" @click.stop.orevent="pay">
+      <div class="content-right" @click.stop.prevent="pay">
         <div class="pay" :class="{'checkout': isCheckout}">
           {{payDesc}}
         </div>
@@ -124,6 +124,7 @@ export default {
   },
   methods: {
     drop(el) {
+        console.log(el);
       for (let i = 0; i < this.balls.length; i++) {
         let ball = this.balls[i];
         if (!ball.show) {
@@ -174,8 +175,10 @@ export default {
           let ball = this.balls[count];
           if (ball.show) {
             let rect = ball.el.getBoundingClientRect();
+            console.log(ball.el.offsetHeight);
             let x = rect.left - 32;
             let y = -(window.innerHeight - rect.top - 22);
+            console.log('x ' + x + 'y ' + y);
             el.style.display = '';
             // el.style.webkitTransform = `translate3D(0, $(y)px, 0)`;
             // el.style.transform = `translate3D(0, $(y)px, 0)`;
