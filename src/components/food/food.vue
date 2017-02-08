@@ -44,7 +44,7 @@
 				<ul v-show="food.ratings && food.ratings.length">
 					<li v-show="needShow(rating)" class="rating-item" v-for="rating in food.ratings">
 						<div class="rating-info">
-							<span class="time">{{rating.rateTime | formatDate}}</span>							
+							<span class="time">{{rating.rateTime | formatDate}}</span>						
 							<div class="user">
 								<span class="name">{{rating.username}}</span><img :src="rating.avatar" class="avatar">
 							</div>
@@ -129,8 +129,8 @@ export default {
     // 		}
     // 	},
     needShow(rating) {
-      console.log('this.selectType: ' + this.selectType + '    ||    this.onlyContent: ' + this.onlyContent);
-      console.log('rating.rateType: ' + rating.rateType + '    ||    rating.text: ' + rating.text);
+      // console.log('this.selectType: ' + this.selectType + '    ||    this.onlyContent: ' + this.onlyContent);
+      // console.log('rating.rateType: ' + rating.rateType + '    ||    rating.text: ' + rating.text);
       let needShow = false;
       if ((this.selectType === ALL) || (rating.rateType === this.selectType)) {
         if (rating.text !== '' || !this.onlyContent) {
@@ -185,15 +185,15 @@ export default {
     ratingselect
   },
   events: {
-    'ratingtype.select' (selectType) {
-      console.log(selectType);
+		'ratingtype.select' (selectType) {
+      // console.log(selectType);
       this.selectType = selectType;
       this.$nextTick(() => {
         this.scroll.refresh();
       });
     },
-    'content.toggle' (onlyContent) {
-      console.log(onlyContent);
+		'content.toggle'(onlyContent) {
+      // console.log(onlyContent);
       this.onlyContent = onlyContent;
       this.$nextTick(() => {
         this.scroll.refresh();

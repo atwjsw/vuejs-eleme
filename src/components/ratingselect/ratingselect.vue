@@ -66,6 +66,7 @@ export default {
 			if (!event._constructed) {
 				return;
 			}
+			// console.log(this.onlyContent);
 			this.onlyContent = !this.onlyContent;
 			this.$dispatch('content.toggle', this.onlyContent);
 		},
