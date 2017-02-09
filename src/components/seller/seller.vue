@@ -11,7 +11,7 @@
 					</div>
 					<div class="favorite" @click="toggleFavorite">
 						<div class="icon-favorite" :class="{'on': favorite}"></div>
-						<div class="text">{{favoriteText}}<!-- 收藏 --></div>
+						<div class="text">{{favoriteText}}</div>
 					</div>
 				</div>
 				<div class="remark">
@@ -64,6 +64,7 @@
 	import split from 'components/split/split';
 	import star from 'components/star/star';
 	import BScroll from 'better-scroll';
+	import {saveToLocal, loadFromLocal} from 'common/js/store';
 
 	// const ERR_OK = 0;
 
@@ -76,8 +77,10 @@
 		data() {
 			return {
 				classMap: [],
-				favorite: false
-				// favoriteText: '收藏'
+				// favorite: false
+				favorite: (() => {
+					return loadFromLocal(this.seller.id, 'favorite', false);
+				})()
 			};
 		},
 		methods: {
@@ -86,6 +89,29 @@
 					return;
 				}
 				this.favorite = !this.favorite;
+				saveToLocal(this.seller.id, 'favorite', this.favorite);
+			},
+			_initScroll() {
+				if (!this.scroll) {
+						this.scroll = new BScroll(this.$els.seller, {click: true});
+				} else {
+						this.scroll.refresh();
+				}
+			},
+			_initPicScroll() {
+					if (this.seller.pics) {
+					let picWidth = 120;
+					let margin = 6;
+					let width = (picWidth + margin) * this.seller.pics.length - margin;
+					this.$els.picList.style.width = width + 'px';
+					this.$nextTick(() => {
+						if (!this.picScroll) {
+							this.picScroll = new BScroll(this.$els.picWrapper, { scrollX: true, 	eventPassthrough: 'vertical' });
+						} else {
+							this.picScroll.refresh();
+						}
+					});
+				};
 			}
 		},
 		components: {
@@ -100,25 +126,15 @@
 		created() {
 			this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee'];
 		},
+		watch: {
+			'seller' () {
+				this._initScroll();
+				this._initPicScroll();
+			}
+		},
 		ready() {
-			this.$nextTick(() => {
-					if (!this.scroll) {
-						this.scroll = new BScroll(this.$els.seller, {click: true});
-					} else {
-						this.scroll.refresh();
-					}
-					// if (this.seller.pics) {
-					let picWidth = 120;
-					let margin = 6;
-					let width = (picWidth + margin) * this.seller.pics.length - margin;
-					this.$els.picList.style.width = width + 'px';
-					if (!this.picScroll) {
-						this.picScroll = new BScroll(this.$els.picWrapper, { scrollX: true, eventPassthrough: 'vertical' });
-					} else {
-						this.picScroll.refresh();
-					}
-				// }
-			});
+			this._initScroll();
+			this._initPicScroll();
 		}
 	};
 </script>
@@ -149,8 +165,7 @@
 					.star
 						display: inline-block
 						vertical-align: top
-						margin-right: 8px
-						// font-size: 14px		
+						margin-right: 8px		
 					.text
 						margin-right: 12px
 						display: inline-block
